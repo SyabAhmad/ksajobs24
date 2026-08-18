@@ -51,7 +51,6 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [catsOpen, setCatsOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const dropRef = useRef<HTMLDivElement>(null);
   const megaRef = useRef<HTMLDivElement>(null);
@@ -100,7 +99,6 @@ export default function Header() {
     const q = query.trim();
     if (!q) return;
     navigate(`/jobs?q=${encodeURIComponent(q)}`);
-    setSearchOpen(false);
     setMenuOpen(false);
   };
 
@@ -191,27 +189,22 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <form
               onSubmit={submitSearch}
-              className={`hidden items-center rounded-full transition-all duration-300 lg:flex ${
-                searchOpen ? "w-64 border border-slate-200 bg-slate-50" : "w-10"
-              }`}
+              className="flex items-center rounded-xl border border-slate-200 bg-slate-50 transition-all duration-300 lg:w-auto lg:rounded-full lg:border-transparent lg:bg-transparent lg:focus-within:border-slate-200 lg:focus-within:bg-slate-50"
               role="search"
             >
               <button
-                type="button"
-                onClick={() => setSearchOpen((v) => !v)}
+                type="submit"
                 aria-label="Search jobs"
-                className="grid size-10 shrink-0 place-items-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-brand-700"
+                className="grid size-10 shrink-0 place-items-center text-slate-500 transition-colors hover:text-brand-700"
               >
                 <Search className="size-5" />
               </button>
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Job title, keyword…"
+                placeholder="Search…"
                 aria-label="Search jobs"
-                className={`bg-transparent text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none ${
-                  searchOpen ? "w-full pr-3 opacity-100" : "w-0 opacity-0"
-                }`}
+                className="w-28 bg-transparent pr-3 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none sm:w-36 lg:w-0 lg:opacity-0 lg:placeholder:whitespace-nowrap lg:focus:w-56 lg:focus:opacity-100 lg:focus:pr-3"
               />
             </form>
 
