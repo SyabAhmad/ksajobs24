@@ -16,19 +16,20 @@ const columns = [
     title: "For Job Seekers",
     links: [
       { label: "Browse Jobs", to: "/jobs" },
-      { label: "Browse Companies", to: "/companies" },
+      { label: "All Categories", to: "/categories" },
       { label: "Career Advice", to: "/blog" },
-      { label: "Upload CV", to: "/dashboard/cv" },
-      { label: "Job Alerts", to: "/dashboard/alerts" },
+      { label: "How to Apply", to: "/how-to-apply" },
+      { label: "Contact Us", to: "/contact" },
     ],
   },
   {
-    title: "For Employers",
+    title: "Popular Categories",
     links: [
-      { label: "Post a Job", to: "/post-job" },
-      { label: "Search Resumes", to: "/employers/resumes" },
-      { label: "Recruitment Solutions", to: "/employers" },
-      { label: "Pricing", to: "/employers/pricing" },
+      { label: "Engineering Jobs", to: "/jobs/engineering" },
+      { label: "IT & Software Jobs", to: "/jobs/it" },
+      { label: "Safety (HSE) Jobs", to: "/jobs/safety" },
+      { label: "Construction Jobs", to: "/jobs/construction" },
+      { label: "Healthcare Jobs", to: "/jobs/healthcare" },
     ],
   },
   {
@@ -69,9 +70,9 @@ export default function Footer() {
           <div className="lg:col-span-4">
             <Logo variant="light" />
             <p className="mt-5 max-w-sm text-sm leading-relaxed">
-              Saudi Arabia&rsquo;s trusted job portal. Connecting talented
-              professionals with the Kingdom&rsquo;s top employers — from Riyadh
-              to Jeddah, Dammam to NEOM.
+              Saudi Arabia&rsquo;s job portal. Browse and apply to the latest
+              verified jobs across the Kingdom — 100% free, no sign-up
+              needed. From Riyadh to Jeddah, Dammam to NEOM.
             </p>
             <div className="mt-6 flex gap-2.5">
               {socials.map(({ icon: Icon, label, href }) => (
