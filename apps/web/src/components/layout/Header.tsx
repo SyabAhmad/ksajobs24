@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   BadgeCheck,
@@ -23,10 +24,25 @@ const featuredLinks = [
   { label: "Safety Jobs", to: "/jobs/safety" },
 ];
 
+const megaSections = [
+  {
+    title: "Engineering & Technical",
+    slugs: ["engineering", "it", "technicians", "oil-gas"],
+  },
+  {
+    title: "Construction & Safety",
+    slugs: ["construction", "safety", "healthcare", "logistics"],
+  },
+  {
+    title: "Business & Admin",
+    slugs: ["finance", "sales-marketing", "admin-hr", "education"],
+  },
+];
+
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  `relative rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
+  `rounded-full px-3.5 py-2 text-sm font-semibold transition-colors ${
     isActive
-      ? "text-brand-700 after:absolute after:inset-x-3 after:-bottom-[13px] after:h-0.5 after:rounded-full after:bg-brand-600"
+      ? "bg-brand-50 text-brand-700"
       : "text-slate-600 hover:bg-brand-50 hover:text-brand-700"
   }`;
 
@@ -38,6 +54,8 @@ export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const dropRef = useRef<HTMLDivElement>(null);
+  const megaRef = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout>>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,12 +65,26 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const openDrop = () => {
+    clearTimeout(closeTimer.current!);
+    setDropOpen(true);
+  };
+
+  const closeDrop = () => {
+    closeTimer.current = setTimeout(() => setDropOpen(false), 120);
+  };
+
   // Close dropdown on outside click / Escape
   useEffect(() => {
     if (!dropOpen) return;
     const onClick = (e: MouseEvent) => {
-      if (dropRef.current && !dropRef.current.contains(e.target as Node))
+      const target = e.target as Node;
+      if (
+        dropRef.current && !dropRef.current.contains(target) &&
+        megaRef.current && !megaRef.current.contains(target)
+      ) {
         setDropOpen(false);
+      }
     };
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setDropOpen(false);
     document.addEventListener("mousedown", onClick);
@@ -112,8 +144,8 @@ export default function Header() {
 
       {/* ── Main bar ────────────────────────────────── */}
       <div
-        className={`border-b bg-white/85 backdrop-blur-xl transition-shadow duration-300 ${
-          scrolled ? "border-slate-200 shadow-lg shadow-slate-900/5" : "border-transparent"
+        className={`border-b-2 border-transparent bg-white [border-image:linear-gradient(to_right,#fbbf24,#079d55,#fbbf24)_1] transition-shadow duration-300 ${
+          scrolled ? "shadow-lg shadow-slate-900/5" : ""
         }`}
       >
         <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
@@ -132,18 +164,18 @@ export default function Header() {
               </NavLink>
             ))}
 
-            {/* Categories dropdown */}
+            {/* Categories trigger */}
             <div
               ref={dropRef}
               className="relative"
-              onMouseEnter={() => setDropOpen(true)}
-              onMouseLeave={() => setDropOpen(false)}
+              onMouseEnter={openDrop}
+              onMouseLeave={closeDrop}
             >
               <button
                 onClick={() => setDropOpen((v) => !v)}
                 aria-expanded={dropOpen}
                 aria-haspopup="true"
-                className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
+                className={`flex items-center gap-1 rounded-full px-3.5 py-2 text-sm font-semibold transition-colors ${
                   dropOpen ? "bg-brand-50 text-brand-700" : "text-slate-600 hover:bg-brand-50 hover:text-brand-700"
                 }`}
               >
@@ -152,40 +184,6 @@ export default function Header() {
                   className={`size-4 transition-transform duration-200 ${dropOpen ? "rotate-180" : ""}`}
                 />
               </button>
-
-              {dropOpen && (
-                <div className="absolute right-0 top-full pt-3">
-                  <div className="w-[32rem] rounded-2xl border border-slate-100 bg-white p-3 shadow-2xl shadow-slate-900/10">
-                    <div className="grid grid-cols-2 gap-1">
-                      {jobCategories.map((c) => (
-                        <Link
-                          key={c.slug}
-                          to={`/jobs/${c.slug}`}
-                          onClick={() => setDropOpen(false)}
-                          className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-brand-50"
-                        >
-                          <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700 transition-colors group-hover:bg-white group-hover:shadow-sm">
-                            <c.icon className="size-5" />
-                          </span>
-                          <span className="text-sm font-semibold text-slate-700 group-hover:text-brand-700">
-                            {c.label}
-                          </span>
-                        </Link>
-                      ))}
-                    </div>
-                    <div className="mt-2 border-t border-slate-100 pt-2">
-                      <Link
-                        to="/categories"
-                        onClick={() => setDropOpen(false)}
-                        className="flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-sm font-bold text-brand-700 transition-colors hover:bg-brand-50"
-                      >
-                        <LayoutGrid className="size-4" />
-                        View all categories
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </nav>
 
@@ -194,7 +192,7 @@ export default function Header() {
             <form
               onSubmit={submitSearch}
               className={`hidden items-center rounded-full transition-all duration-300 lg:flex ${
-                searchOpen ? "w-64 border border-brand-200 bg-brand-50/60" : "w-10"
+                searchOpen ? "w-64 border border-slate-200 bg-slate-50" : "w-10"
               }`}
               role="search"
             >
@@ -202,7 +200,7 @@ export default function Header() {
                 type="button"
                 onClick={() => setSearchOpen((v) => !v)}
                 aria-label="Search jobs"
-                className="grid size-10 shrink-0 place-items-center rounded-full text-slate-500 transition-colors hover:bg-brand-50 hover:text-brand-700"
+                className="grid size-10 shrink-0 place-items-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-brand-700"
               >
                 <Search className="size-5" />
               </button>
@@ -230,7 +228,7 @@ export default function Header() {
 
         {/* ── Mobile menu ───────────────────────────── */}
         {menuOpen && (
-          <div className="border-t border-slate-100 bg-white lg:hidden">
+          <div className="border-t-2 border-transparent bg-white [border-image:linear-gradient(to_right,#fbbf24,#079d55,#fbbf24)_1] lg:hidden">
             <div className="space-y-1 px-4 py-4">
               {/* Mobile search */}
               <form onSubmit={submitSearch} className="mb-3 flex overflow-hidden rounded-xl border border-brand-200 bg-brand-50/60" role="search">
@@ -304,6 +302,74 @@ export default function Header() {
           </div>
         )}
       </div>
+
+      {/* ── Desktop mega menu (portal) ──────────────── */}
+      {createPortal(
+        <>
+          {/* Hover bridge — always rendered so mouse can reach mega menu */}
+          <div
+            className="fixed inset-x-0 z-[49]"
+            style={{ top: "5.75rem", height: "1.5rem" }}
+            onMouseEnter={openDrop}
+            onMouseLeave={closeDrop}
+          />
+
+          <div
+            ref={megaRef}
+            className={`fixed inset-x-0 z-50 border-b-2 border-transparent bg-white [border-image:linear-gradient(to_right,#fbbf24,#079d55,#fbbf24)_1] shadow-xl shadow-slate-900/5 transition-all duration-300 ease-out ${
+              dropOpen
+                ? "translate-y-0 opacity-100"
+                : "-translate-y-2 pointer-events-none opacity-0"
+            }`}
+            style={{ top: "7.25rem" }}
+            onMouseEnter={openDrop}
+            onMouseLeave={closeDrop}
+          >
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-3 gap-8 py-8">
+                {megaSections.map((section) => (
+                  <div key={section.title}>
+                    <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">
+                      {section.title}
+                    </h3>
+                    <div className="space-y-1">
+                      {section.slugs.map((slug) => {
+                        const cat = jobCategories.find((c) => c.slug === slug)!;
+                        return (
+                          <Link
+                            key={slug}
+                            to={`/jobs/${slug}`}
+                            onClick={() => setDropOpen(false)}
+                            className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-brand-50"
+                          >
+                            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700 transition-colors group-hover:bg-white group-hover:shadow-sm">
+                              <cat.icon className="size-5" />
+                            </span>
+                            <span className="text-sm font-semibold text-slate-700 group-hover:text-brand-700">
+                              {cat.label}
+                            </span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="border-t border-slate-100 py-3">
+                <Link
+                  to="/categories"
+                  onClick={() => setDropOpen(false)}
+                  className="flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-sm font-bold text-brand-700 transition-colors hover:bg-brand-50"
+                >
+                  <LayoutGrid className="size-4" />
+                  View all categories
+                </Link>
+              </div>
+            </div>
+          </div>
+        </>,
+        document.body,
+      )}
     </header>
   );
 }
