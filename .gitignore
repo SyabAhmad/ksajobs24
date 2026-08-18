@@ -1,0 +1,29 @@
+# ─── Node / Vite ──────────────
+node_modules/
+dist/
+*.local
+
+# ─── Python / uv ──────────────
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# ─── Env ──────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── Logs / OS / Editor ───────
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ─── Cloudflare / Vercel ──────
+.wrangler/
+.dev.vars
+.vercel
