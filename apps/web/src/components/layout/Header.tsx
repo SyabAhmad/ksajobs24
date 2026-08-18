@@ -107,7 +107,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50">
       {/* ── Top info bar ────────────────────────────── */}
-      <div className="hidden bg-brand-950 text-brand-100 lg:block">
+      <div className="bg-brand-950 text-brand-100">
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-4 text-xs font-medium sm:px-6 lg:px-8">
           <div className="flex items-center gap-5">
             <span className="inline-flex items-center gap-1.5">
@@ -116,22 +116,22 @@ export default function Header() {
             </span>
             <a
               href="mailto:info@ksajobs24.com"
-              className="inline-flex items-center gap-1.5 transition-colors hover:text-white"
+              className="hidden items-center gap-1.5 transition-colors hover:text-white sm:inline-flex"
             >
               <Mail className="size-3.5 text-gold-400" />
               info@ksajobs24.com
             </a>
-            <span className="inline-flex items-center gap-1.5">
+            <span className="hidden items-center gap-1.5 sm:inline-flex">
               <Clock className="size-3.5 text-gold-400" />
               Jobs updated daily
             </span>
           </div>
           <div className="flex items-center gap-5">
-            <span className="inline-flex items-center gap-1.5">
+            <span className="hidden items-center gap-1.5 sm:inline-flex">
               <BadgeCheck className="size-3.5 text-gold-400" />
               100% free — apply without sign-up
             </span>
-            <span className="h-3.5 w-px bg-brand-100/25" aria-hidden />
+            <span className="hidden h-3.5 w-px bg-brand-100/25 sm:block" aria-hidden />
             <div className="inline-flex items-center gap-1.5">
               <Globe className="size-3.5 text-gold-400" />
               <button className="font-semibold text-white">EN</button>

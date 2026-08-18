@@ -31,7 +31,7 @@ export default function LatestJobs() {
             return (
               <Link
                 key={job.id}
-                to={`/jobs/${job.category}`}
+                to={`/job/${job.id}`}
                 className="group rounded-2xl border border-slate-100 bg-white p-5 transition-all hover:border-brand-200 hover:shadow-lg hover:shadow-brand-900/5"
               >
                 <div className="flex items-start justify-between">
