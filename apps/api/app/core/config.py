@@ -25,11 +25,19 @@ class Settings(BaseSettings):
     r2_access_key_id: str = ""
     r2_secret_access_key: str = ""
     r2_bucket_name: str = "ksajobs24-media"
+    r2_s3_endpoint: str = ""
     r2_public_url: str = ""
 
     @property
     def cors_origins(self) -> list[str]:
         return [o.strip() for o in self.allowed_origins.split(",") if o.strip()]
+
+    @property
+    def r2_endpoint(self) -> str:
+        return (
+            self.r2_s3_endpoint
+            or f"https://{self.r2_account_id}.r2.cloudflarestorage.com"
+        )
 
     @property
     def d1_api_url(self) -> str:
