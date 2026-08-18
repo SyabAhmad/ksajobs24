@@ -306,13 +306,15 @@ export default function Header() {
       {/* ── Desktop mega menu (portal) ──────────────── */}
       {createPortal(
         <>
-          {/* Hover bridge — always rendered so mouse can reach mega menu */}
-          <div
-            className="fixed inset-x-0 z-[49]"
-            style={{ top: "5.75rem", height: "1.5rem" }}
-            onMouseEnter={openDrop}
-            onMouseLeave={closeDrop}
-          />
+          {/* Hover bridge — only rendered when dropdown is open */}
+          {dropOpen && (
+            <div
+              className="fixed inset-x-0 z-[49]"
+              style={{ top: "5.75rem", height: "1.5rem" }}
+              onMouseEnter={openDrop}
+              onMouseLeave={closeDrop}
+            />
+          )}
 
           <div
             ref={megaRef}
