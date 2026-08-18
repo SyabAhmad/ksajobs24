@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
-import { mockCategories, type Category } from "../../data/mock";
+import { mockCategories, type Category } from "../data/mock";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState(mockCategories);

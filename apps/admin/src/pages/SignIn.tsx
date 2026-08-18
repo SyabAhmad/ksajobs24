@@ -1,17 +1,25 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
 
 export default function SignIn() {
   const { signIn } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    signIn(email, password);
+    setError("");
+    try {
+      signIn(email, password);
+      navigate("/dashboard");
+    } catch {
+      setError("Invalid email or password");
+    }
   };
 
   return (
@@ -23,6 +31,13 @@ export default function SignIn() {
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+          {error && (
+            <div className="flex items-center gap-2 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-300 ring-1 ring-red-500/20">
+              <AlertCircle className="size-4 shrink-0" />
+              {error}
+            </div>
+          )}
+
           <div className="rounded-xl bg-white/10 p-1 ring-1 ring-white/10 backdrop-blur-sm">
             <div className="flex items-center gap-3 rounded-lg bg-white px-4 py-3">
               <Mail className="size-5 text-slate-400" />
@@ -62,9 +77,8 @@ export default function SignIn() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-brand-200/60">
-          Don&rsquo;t have an account?{" "}
-          <Link to="/signup" className="font-bold text-gold-400 hover:text-gold-300">Sign up</Link>
+        <p className="mt-6 text-center text-xs text-brand-200/40">
+          Demo: admin@ksajobs24.com / ksajobs24.com
         </p>
       </div>
     </div>

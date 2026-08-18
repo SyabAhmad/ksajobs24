@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import AdminLayout from "./components/layout/AdminLayout";
 import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import JobsPage from "./pages/JobsPage";
 import BlogPage from "./pages/BlogPage";
@@ -16,7 +15,6 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="jobs" element={<JobsPage />} />

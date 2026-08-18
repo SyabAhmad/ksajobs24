@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Plus, Search, Pencil, Trash2, X } from "lucide-react";
-import { mockBlog, type BlogPost } from "../../data/mock";
+import { mockBlog, type BlogPost } from "../data/mock";
 
 const statusColors: Record<string, string> = {
   published: "bg-green-50 text-green-700",
